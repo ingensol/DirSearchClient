@@ -31,7 +31,7 @@ var app = {
     // Implements search operations.
     search: function () {
         document.getElementById('userlist').innerHTML = "";
-
+        alert("search function");
         app.authenticate(function (authresult) {
             var searchText = document.getElementById('searchfield').value;
             app.requestData(authresult, searchText);
