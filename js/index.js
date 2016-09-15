@@ -27,6 +27,7 @@ var app = {
     // Invoked when Cordova is fully loaded.
     onDeviceReady: function() {
         document.getElementById('search').addEventListener('click', app.search);
+        alert("onDeviceReady");
     },
     // Implements search operations.
     search: function () {
