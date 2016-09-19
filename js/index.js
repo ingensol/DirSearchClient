@@ -18,11 +18,11 @@
  */
 
 // TODO: Add the configuration values for your Azure AD application.
-var authority = "https://login.windows.net/common",
-redirectUri = "http://MyDirectorySearcherApp",
-resourceUri = "https://graph.windows.net",
-clientId = "2b12cfe7-b4d8-4256-9072-ca27dade4e55",
-graphApiVersion = "2013-11-08";
+   var authority = "https://login.windows.net/common",
+    redirectUri = "http://MyDirectorySearcherApp",
+    resourceUri = "https://graph.windows.net",
+    clientId = "a5d92493-ae5a-4a9f-bcbf-9f1d354067d3",
+    graphApiVersion = "2013-11-08";
 var app = {
     // Invoked when Cordova is fully loaded.
     onDeviceReady: function() {
