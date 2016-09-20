@@ -9,8 +9,8 @@
     },
     "cordova-plugin-ms-adal": {
         "source": {
-            "type": "registry",
-            "id": "cordova-plugin-ms-adal"
+            "type": "local",
+            "path": "..\\azure-activedirectory-library-for-cordova"
         },
         "is_top_level": true,
         "variables": {}
