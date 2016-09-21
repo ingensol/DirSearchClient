@@ -16,30 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-alert("here");
-// TODO: Add the configuration values for your Azure AD application.
-   var authority = "https://login.windows.net/common",
+
+var authority = "https://login.windows.net/common",
     redirectUri = "http://MyDirectorySearcherApp",
     resourceUri = "https://graph.windows.net",
     clientId = "a5d92493-ae5a-4a9f-bcbf-9f1d354067d3",
     graphApiVersion = "2013-11-08";
+
 var app = {
     // Invoked when Cordova is fully loaded.
-    onDeviceReady: function() {
+    onDeviceReady: function () {
         document.getElementById('search').addEventListener('click', app.search);
-        alert("onDeviceReady");
     },
     // Implements search operations.
     search: function () {
         document.getElementById('userlist').innerHTML = "";
-        alert("search function");
+
         app.authenticate(function (authresult) {
             var searchText = document.getElementById('searchfield').value;
             app.requestData(authresult, searchText);
         });
     },
-    
-    // TODO: Make a token request using ADAL
     // Shows user authentication dialog if required.
     authenticate: function (authCompletedCallback) {
 
@@ -61,7 +58,6 @@ var app = {
         });
 
     },
-    // TODO: Call the Azure AD Graph API using the token acquired above.
     // Makes Api call to receive user list.
     requestData: function (authResult, searchText) {
         var req = new XMLHttpRequest();
@@ -84,9 +80,8 @@ var app = {
 
         req.send();
     },
-
     // Renders user list.
-    renderData: function(data) {
+    renderData: function (data) {
         var users = data && data.value;
         if (users.length === 0) {
             app.error("No users found");
@@ -115,8 +110,8 @@ var app = {
                 elt.appendChild(children);
             }
 
-            if(attributes && attributes.constructor === Object) {
-                for(var attrName in attributes) {
+            if (attributes && attributes.constructor === Object) {
+                for (var attrName in attributes) {
                     elt.setAttribute(attrName, attributes[attrName]);
                 }
             }
@@ -124,7 +119,7 @@ var app = {
             return elt;
         }
 
-        users.map(function(userInfo) {
+        users.map(function (userInfo) {
             return $new('li', ['topcoat-list__item'], null, [
                 $new('div', [], null, [
                     $new('p', ['userinfo-label'], 'First name: '),
@@ -163,12 +158,12 @@ var app = {
                     })
                 ])
             ]);
-        }).forEach(function(userListItem) {
+        }).forEach(function (userListItem) {
             userlist.appendChild(userListItem);
         });
     },
     // Renders application error.
-    error: function(err) {
+    error: function (err) {
         var userlist = document.getElementById('userlist');
         userlist.innerHTML = "";
 
