@@ -25,7 +25,7 @@ var authority = "https://login.windows.net/common",
 
 var app = {
     // Invoked when Cordova is fully loaded.
-    onDeviceReady: function () {
+    onDeviceReady: function() {
         document.getElementById('search').addEventListener('click', app.search);
     },
     // Implements search operations.
@@ -67,21 +67,21 @@ var app = {
         req.open("GET", url, true);
         req.setRequestHeader('Authorization', 'Bearer ' + authResult.accessToken);
 
-        req.onload = function (e) {
+        req.onload = function(e) {
             if (e.target.status >= 200 && e.target.status < 300) {
                 app.renderData(JSON.parse(e.target.response));
                 return;
             }
             app.error('Data request failed: ' + e.target.response);
         };
-        req.onerror = function (e) {
+        req.onerror = function(e) {
             app.error('Data request failed: ' + e.error);
         }
 
         req.send();
     },
     // Renders user list.
-    renderData: function (data) {
+    renderData: function(data) {
         var users = data && data.value;
         if (users.length === 0) {
             app.error("No users found");
@@ -110,8 +110,8 @@ var app = {
                 elt.appendChild(children);
             }
 
-            if (attributes && attributes.constructor === Object) {
-                for (var attrName in attributes) {
+            if(attributes && attributes.constructor === Object) {
+                for(var attrName in attributes) {
                     elt.setAttribute(attrName, attributes[attrName]);
                 }
             }
@@ -119,7 +119,7 @@ var app = {
             return elt;
         }
 
-        users.map(function (userInfo) {
+        users.map(function(userInfo) {
             return $new('li', ['topcoat-list__item'], null, [
                 $new('div', [], null, [
                     $new('p', ['userinfo-label'], 'First name: '),
@@ -158,12 +158,12 @@ var app = {
                     })
                 ])
             ]);
-        }).forEach(function (userListItem) {
+        }).forEach(function(userListItem) {
             userlist.appendChild(userListItem);
         });
     },
     // Renders application error.
-    error: function (err) {
+    error: function(err) {
         var userlist = document.getElementById('userlist');
         userlist.innerHTML = "";
 
