@@ -1,1 +1,0 @@
-D:\Projects\DirSearchClient\platforms\windows\CordovaApp.Windows.jsproj;neutral
