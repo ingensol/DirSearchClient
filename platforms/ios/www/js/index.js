@@ -18,7 +18,8 @@
  */
 var app = {
     // Application Constructor
-    initialize: function() {
+    initialize: function () {
+        alert("test");
         this.bindEvents();
     },
     // Bind Event Listeners
