@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
+alert("here");
 // TODO: Add the configuration values for your Azure AD application.
    var authority = "https://login.windows.net/common",
     redirectUri = "http://MyDirectorySearcherApp",
