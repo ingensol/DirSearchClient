@@ -17,7 +17,7 @@
  * under the License.
  */
 
-var authority = "https://login.windows.net/common/oauth2/authorize",
+var authority = "https://login.windows.net/common",
     redirectUri = "http://MyDirectorySearcherApp",
     resourceUri = "https://graph.windows.net",
     clientId = "a5d92493-ae5a-4a9f-bcbf-9f1d354067d3",
