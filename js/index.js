@@ -147,9 +147,9 @@ var app = {
     },
     // Shows user authentication dialog if required.
     authenticate: function (authCompletedCallback) {
-        createContext();
-        acquireTokenSilent();
-        /*
+        //createContext();
+        //acquireTokenSilent();
+        
         app.context = new Microsoft.ADAL.AuthenticationContext(authority);
         app.context.tokenCache.readItems().then(function (items) {
             if (items.length > 0) {
@@ -166,7 +166,7 @@ var app = {
                 });
             });
         });
-        */
+        
     },
     // Makes Api call to receive user list.
     requestData: function (authResult, searchText) {
