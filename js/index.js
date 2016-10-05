@@ -40,7 +40,7 @@ var app = {
     // Implements search operations.
     search: function () {
         document.getElementById('userlist').innerHTML = "";
-
+        alert("Search");
         app.authenticate(function (authresult) {
             var searchText = document.getElementById('searchfield').value;
             app.requestData(authresult, searchText);
