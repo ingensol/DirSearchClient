@@ -91,7 +91,7 @@ var app = {
             });
     },
     acquireTokenSilent: function () {
-        alert("acquireTokenSilent");
+       // alert("acquireTokenSilent");
         if (app.authContext == null) {
      //       app.error('Authentication context isn\'t created yet. Create context first');
             return;
