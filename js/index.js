@@ -1,32 +1,66 @@
-﻿/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
+﻿// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
-var authority = "https://login.windows.net/common",
-    redirectUri = "http://MyDirectorySearcherApp",
-    resourceUri = "https://graph.windows.net",
-    clientId = "a5d92493-ae5a-4a9f-bcbf-9f1d354067d3",
-    graphApiVersion = "2013-11-08";
+var AuthenticationContext;
+
+var authority = 'https://login.windows.net/keckmedicine.onmicrosoft.com';
+var resourceUrl = 'https://graph.windows.net/';
+var appId = '2b12cfe7-b4d8-4256-9072-ca27dade4e55';
+var redirectUrl = 'http://localhost:4400/services/aad/redirectTarget.html';
+
+var tenantName = 'keckmedicine.onmicrosoft.com';
+var endpointUrl = resourceUrl + tenantName;
+
+function pre(json) {
+    return '<pre>' + JSON.stringify(json, null, 4) + '</pre>';
+}
 
 var app = {
-    // Invoked when Cordova is fully loaded.
-    onDeviceReady: function() {
+    // Application Constructor
+    initialize: function () {
+        this.bindEvents();
+    },
+    // Bind Event Listeners
+    //
+    // Bind any events that are required on startup. Common events are:
+    // 'load', 'deviceready', 'offline', and 'online'.
+    bindEvents: function () {
+        document.addEventListener('deviceready', app.onDeviceReady, false);
         document.getElementById('search').addEventListener('click', app.search);
+
+    },
+    // deviceready Event Handler
+    //
+    // The scope of 'this' is the event. In order to call the 'receivedEvent'
+    // function, we must explicitly call 'app.receivedEvent(...);'
+    onDeviceReady: function () {
+        // app.receivedEvent('deviceready');
+        app.logArea = document.getElementById("log-area");
+        app.log("Cordova initialized, 'deviceready' event was fired");
+        AuthenticationContext = Microsoft.ADAL.AuthenticationContext;
+    },
+    // Update DOM on a Received Event
+    receivedEvent: function (id) {
+        var parentElement = document.getElementById(id);
+        var listeningElement = parentElement.querySelector('.listening');
+        var receivedElement = parentElement.querySelector('.received');
+
+        listeningElement.setAttribute('style', 'display:none;');
+        receivedElement.setAttribute('style', 'display:block;');
+
+        console.log('Received Event: ' + id);
+    },
+
+    log: function (message, isError) {
+        isError ? console.error(message) : console.log(message);
+        var logItem = document.createElement('li');
+        logItem.classList.add("topcoat-list__item");
+        isError && logItem.classList.add("error-item");
+        var timestamp = '<span class="timestamp">' + new Date().toLocaleTimeString() + ': </span>';
+        logItem.innerHTML = (timestamp + message);
+        app.logArea.insertBefore(logItem, app.logArea.firstChild);
+    },
+    error: function (message) {
+        app.log(message, true);
     },
     // Implements search operations.
     search: function () {
@@ -37,10 +71,14 @@ var app = {
             app.requestData(authresult, searchText);
         });
     },
+
     // Shows user authentication dialog if required.
     authenticate: function (authCompletedCallback) {
 
         app.context = new Microsoft.ADAL.AuthenticationContext(authority);
+        app.createContext();
+        app.readTokenCache();
+
         app.context.tokenCache.readItems().then(function (items) {
             if (items.length > 0) {
                 authority = items[0].authority;
@@ -57,6 +95,69 @@ var app = {
             });
         });
 
+    },
+    createContext: function () {
+        AuthenticationContext.createAsync(authority)
+        .then(function (context) {
+            app.authContext = context;
+           // app.log("Created authentication context for authority URL: " + context.authority);
+        }, app.error);
+    },
+    acquireToken: function () {
+        if (app.authContext == null) {
+            app.error('Authentication context isn\'t created yet. Create context first');
+            return;
+        }
+
+        app.authContext.acquireTokenAsync(resourceUrl, appId, redirectUrl)
+            .then(function (authResult) {
+            //    app.log('Acquired token successfully: ' + pre(authResult));
+            }, function (err) {
+                app.error("Failed to acquire token: " + pre(err));
+            });
+    },
+    acquireTokenSilent: function () {
+        if (app.authContext == null) {
+            app.error('Authentication context isn\'t created yet. Create context first');
+            return;
+        }
+
+        // testUserId parameter is needed if you have > 1 token cache items to avoid "multiple_matching_tokens_detected" error
+        // Note: This is for the test purposes only
+        var testUserId;
+        app.authContext.tokenCache.readItems().then(function (cacheItems) {
+            if (cacheItems.length > 0) {
+                testUserId = cacheItems[0].userInfo.userId;
+            }
+
+            app.authContext.acquireTokenSilentAsync(resourceUrl, appId, testUserId).then(function (authResult) {
+               // app.log('Acquired token successfully: ' + pre(authResult));
+            }, function (err) {
+                app.error("Failed to acquire token silently: " + pre(err));
+            });
+        }, function (err) {
+
+            app.error("Unable to get User ID from token cache. Have you acquired token already? " + pre(err));
+        });
+    },
+    readTokenCache: function () {
+        if (app.authContext == null) {
+            app.error('Authentication context isn\'t created yet. Create context first');
+            return;
+        }
+
+        app.authContext.tokenCache.readItems()
+        .then(function (res) {
+            var text = "Read token cache successfully. There is " + res.length + " items stored.";
+            if (res.length > 0) {
+                text += "The first one is: " + pre(res[0]);
+            }
+         //   app.log(text);
+
+        }, function (err) {
+            acquireToken();
+            app.error("Failed to read token cache: " + pre(err));
+        });
     },
     // Makes Api call to receive user list.
     requestData: function (authResult, searchText) {
@@ -161,19 +262,5 @@ var app = {
         }).forEach(function(userListItem) {
             userlist.appendChild(userListItem);
         });
-    },
-    // Renders application error.
-    error: function(err) {
-        var userlist = document.getElementById('userlist');
-        userlist.innerHTML = "";
-
-        var errorItem = document.createElement('li');
-        errorItem.classList.add('topcoat-list__item');
-        errorItem.classList.add('error-item');
-        errorItem.innerText = err;
-
-        userlist.appendChild(errorItem);
     }
 };
-
-document.addEventListener('deviceready', app.onDeviceReady, false);
