@@ -24,6 +24,7 @@ var app = {
     // Bind any events that are required on startup. Common events are:
     // 'load', 'deviceready', 'offline', and 'online'.
     bindEvents: function () {
+        alert("bindEvents");
         document.addEventListener('deviceready', app.onDeviceReady, false);
         document.getElementById('search').addEventListener('click', app.search);
     },
@@ -32,6 +33,7 @@ var app = {
     // The scope of 'this' is the event. In order to call the 'receivedEvent'
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function () {
+        alert("onDeviceReady");
         // app.receivedEvent('deviceready');
         app.logArea = document.getElementById("log-area");
        // app.log("Cordova initialized, 'deviceready' event was fired");
