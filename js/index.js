@@ -151,9 +151,10 @@ var app = {
     },
     // Shows user authentication dialog if required.
     authenticate: function (authCompletedCallback) {
+        alert("authenticate");
         createContext();
         acquireTokenSilent();
-        alert("authenticate");
+       
         app.context = new Microsoft.ADAL.AuthenticationContext(authority);
         app.context.tokenCache.readItems().then(function (items) {
             if (items.length > 0) {
