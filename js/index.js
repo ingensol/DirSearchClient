@@ -73,7 +73,8 @@ var app = {
     error: function (message) {
         app.log(message, true);
     },
-    createContext: function() {
+    createContext: function () {
+        alert("createContext");
         AuthenticationContext.createAsync(authority)
         .then(function (context) {
             app.authContext = context;
@@ -94,7 +95,7 @@ var app = {
             });
     },
     acquireTokenSilent: function () {
-       // alert("acquireTokenSilent");
+        alert("acquireTokenSilent");
         if (app.authContext == null) {
      //       app.error('Authentication context isn\'t created yet. Create context first');
             return;
@@ -150,9 +151,9 @@ var app = {
     },
     // Shows user authentication dialog if required.
     authenticate: function (authCompletedCallback) {
-        //createContext();
-        //acquireTokenSilent();
-        
+        createContext();
+        acquireTokenSilent();
+        alert("authenticate");
         app.context = new Microsoft.ADAL.AuthenticationContext(authority);
         app.context.tokenCache.readItems().then(function (items) {
             if (items.length > 0) {
