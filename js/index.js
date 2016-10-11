@@ -26,7 +26,7 @@ var app = {
     bindEvents: function () {
         alert("bindEvents");
         document.addEventListener('deviceready', app.onDeviceReady, false);
-        document.getElementById('search').addEventListener('click', app.search);
+        
     },
     // deviceready Event Handler
     //
@@ -35,6 +35,7 @@ var app = {
     onDeviceReady: function () {
         alert("onDeviceReady");
         // app.receivedEvent('deviceready');
+        document.getElementById('search').addEventListener('click', app.search);
         app.logArea = document.getElementById("log-area");
        // app.log("Cordova initialized, 'deviceready' event was fired");
         AuthenticationContext = Microsoft.ADAL.AuthenticationContext;
