@@ -72,6 +72,7 @@ var app = {
         app.logArea.insertBefore(logItem, app.logArea.firstChild);
     },
     error: function (message) {
+        alert(message);
         app.log(message, true);
     },
     createContext: function () {
@@ -79,6 +80,7 @@ var app = {
         AuthenticationContext.createAsync(authority)
         .then(function (context) {
             app.authContext = context;
+            alert("Created authentication context for authority URL: " + context.authority);
       //      app.log("Created authentication context for authority URL: " + context.authority);
         }, app.error);
     },
