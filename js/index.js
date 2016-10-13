@@ -178,6 +178,7 @@ var app = {
             if (items.length > 0) {
                 authority = items[0].authority;
                 app.context = new Microsoft.ADAL.AuthenticationContext(authority);
+                alert("tokenCache");
             }
             // Attempt to authorize user silently
             app.context.acquireTokenSilentAsync(resourceUri, clientId)
@@ -185,6 +186,7 @@ var app = {
                 // We require user cridentials so triggers authentication dialog
                 app.context.acquireTokenAsync(resourceUri, clientId, redirectUri)
                 .then(authCompletedCallback, function (err) {
+                    alert("Failed to authenticate: " + err);
                     app.error("Failed to authenticate: " + err);
                 });
             });
