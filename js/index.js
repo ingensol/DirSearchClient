@@ -122,7 +122,8 @@ var app = {
                 alert("Acquired token successfull");
       //          app.log('Acquired token successfully: ' + pre(authResult));
             }, function (err) {
-                alert("Failed to acquire token silently");
+                alert("Failed to acquire token silently " + pre(err));
+                app.acquireToken();
         //        app.error("Failed to acquire token silently: " + pre(err));
             });
         }, function (err) {
