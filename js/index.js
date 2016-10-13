@@ -98,6 +98,7 @@ var app = {
     acquireTokenSilent: function () {
         alert("acquireTokenSilent");
         if (app.authContext == null) {
+            alert("Authentication context isn\'t created yet. Create context first");
      //       app.error('Authentication context isn\'t created yet. Create context first');
             return;
         }
@@ -107,12 +108,15 @@ var app = {
         var testUserId;
         app.authContext.tokenCache.readItems().then(function (cacheItems) {
             if (cacheItems.length > 0) {
+                alert("cacheItems.length");
                 testUserId = cacheItems[0].userInfo.userId;
             }
 
             app.authContext.acquireTokenSilentAsync(resourceUrl, appId, testUserId).then(function (authResult) {
+                alert("Acquired token successfull");
       //          app.log('Acquired token successfully: ' + pre(authResult));
-            }, function(err) {
+            }, function (err) {
+                alert("Failed to acquire token silently");
         //        app.error("Failed to acquire token silently: " + pre(err));
             });
         }, function (err) {
