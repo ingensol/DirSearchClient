@@ -108,7 +108,8 @@ var app = {
      //       app.error('Authentication context isn\'t created yet. Create context first');
             return;
         }
-
+    
+        app.readTokenCache();
         // testUserId parameter is needed if you have > 1 token cache items to avoid "multiple_matching_tokens_detected" error
         // Note: This is for the test purposes only
         var testUserId;
@@ -132,7 +133,9 @@ var app = {
         });
     },
     readTokenCache: function () {
+        alert("readTokenCache ");
         if (app.authContext == null) {
+            alert("Authentication context isn\'t created yet. Create context first ");
      //       app.error('Authentication context isn\'t created yet. Create context first');
             return;
         }
@@ -143,6 +146,7 @@ var app = {
             if (res.length > 0) {
                 text += "The first one is: " + pre(res[0]);
             }
+            alert(text);
       //      app.log(text);
 
         }, function (err) {
