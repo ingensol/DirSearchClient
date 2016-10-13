@@ -44,7 +44,8 @@ var app = {
     search: function () {
         document.getElementById('userlist').innerHTML = "";
         alert("Search");
-        app.authenticate(function (authresult) {               
+        app.authenticate(function (authresult) {
+            alert("go authenticate");
             var searchText = document.getElementById('searchfield').value;
             alert("searchText = " + searchText);
             app.requestData(authresult, searchText);
