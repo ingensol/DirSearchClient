@@ -44,8 +44,7 @@ var app = {
     search: function () {
         document.getElementById('userlist').innerHTML = "";
         alert("Search");
-        app.authenticate(function (authresult) {
-            alert("go authenticate");
+        app.authenticate(function (authresult) {          
             var searchText = document.getElementById('searchfield').value;
             alert("searchText = " + searchText);
             app.requestData(authresult, searchText);
@@ -182,7 +181,8 @@ var app = {
                 app.context = new Microsoft.ADAL.AuthenticationContext(authority);
                 alert("tokenCache");
             }
-            // Attempt to authorize user silently
+            alert("Attempt to authorize user silently");
+            // 
             app.context.acquireTokenSilentAsync(resourceUri, clientId)
             .then(authCompletedCallback, function () {
                 // We require user cridentials so triggers authentication dialog
