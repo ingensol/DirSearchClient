@@ -44,8 +44,9 @@ var app = {
     search: function () {
         document.getElementById('userlist').innerHTML = "";
         alert("Search");
-        app.authenticate(function (authresult) {
+        app.authenticate(function (authresult) {               
             var searchText = document.getElementById('searchfield').value;
+            alert("searchText = " + searchText);
             app.requestData(authresult, searchText);
         });
     },
@@ -115,7 +116,7 @@ var app = {
         //        app.error("Failed to acquire token silently: " + pre(err));
             });
         }, function (err) {
-            acquireToken();
+            app.acquireToken();
        //     app.error("Unable to get User ID from token cache. Have you acquired token already? " + pre(err));
         });
     },
