@@ -85,15 +85,19 @@ var app = {
         }, app.error);
     },
     acquireToken: function () {
+        alert("acquireToken");
         if (app.authContext == null) {
+            alert("Authentication context isn\'t created yet. Create context first");
    //         app.error('Authentication context isn\'t created yet. Create context first');
             return;
         }
 
         app.authContext.acquireTokenAsync(resourceUrl, appId, redirectUrl)
-            .then(function(authResult) {
+            .then(function (authResult) {
+                alert("Acquired token successfully: " + pre(authResult));
      //           app.log('Acquired token successfully: ' + pre(authResult));
-            }, function(err) {
+            }, function (err) {
+                alert("Failed to acquire token: " + pre(err));
     //            app.error("Failed to acquire token: " + pre(err));
             });
     },
