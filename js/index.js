@@ -74,7 +74,7 @@ var app = {
         app.log(message, true);
     },
     createContext: function () {
-        alert("createContext");
+        alert("createContext");  
         AuthenticationContext.createAsync(authority)
         .then(function (context) {
             app.authContext = context;
@@ -152,8 +152,8 @@ var app = {
     // Shows user authentication dialog if required.
     authenticate: function (authCompletedCallback) {
         alert("authenticate");
-        createContext();
-        acquireTokenSilent();
+        app.createContext();
+        app.acquireTokenSilent();
        
         app.context = new Microsoft.ADAL.AuthenticationContext(authority);
         app.context.tokenCache.readItems().then(function (items) {
