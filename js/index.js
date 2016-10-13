@@ -174,6 +174,7 @@ var app = {
        // app.acquireTokenSilent();
        
         app.context = new Microsoft.ADAL.AuthenticationContext(authority);
+        alert("got context");
         app.context.tokenCache.readItems().then(function (items) {
             if (items.length > 0) {
                 authority = items[0].authority;
