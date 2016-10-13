@@ -81,6 +81,7 @@ var app = {
         .then(function (context) {
             app.authContext = context;
             alert("Created authentication context for authority URL: " + context.authority);
+            app.acquireTokenSilent();
       //      app.log("Created authentication context for authority URL: " + context.authority);
         }, app.error);
     },
@@ -95,6 +96,7 @@ var app = {
         app.authContext.acquireTokenAsync(resourceUrl, appId, redirectUrl)
             .then(function (authResult) {
                 alert("Acquired token successfully: " + pre(authResult));
+                app.readTokenCache();
      //           app.log('Acquired token successfully: ' + pre(authResult));
             }, function (err) {
                 alert("Failed to acquire token: " + pre(err));
@@ -169,8 +171,8 @@ var app = {
     authenticate: function (authCompletedCallback) {
         alert("authenticate");
         app.createContext();
-        app.acquireTokenSilent();
-       
+       // app.acquireTokenSilent();
+       /*
         app.context = new Microsoft.ADAL.AuthenticationContext(authority);
         app.context.tokenCache.readItems().then(function (items) {
             if (items.length > 0) {
@@ -187,7 +189,7 @@ var app = {
                 });
             });
         });
-        
+        */
     },
     // Makes Api call to receive user list.
     requestData: function (authResult, searchText) {
