@@ -183,10 +183,10 @@ var app = {
             }
             alert("Attempt to authorize user silently");
             // 
-            app.context.acquireTokenSilentAsync(resourceUri, clientId)
+            app.context.acquireTokenSilentAsync(resourceUri, appId)
             .then(authCompletedCallback, function () {
                 // We require user cridentials so triggers authentication dialog
-                app.context.acquireTokenAsync(resourceUri, clientId, redirectUri)
+                app.context.acquireTokenAsync(resourceUri, appId, redirectUri)
                 .then(authCompletedCallback, function (err) {
                     alert("Failed to authenticate: " + err);
                     app.error("Failed to authenticate: " + err);
