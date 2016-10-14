@@ -185,6 +185,7 @@ var app = {
             // 
             app.context.acquireTokenSilentAsync(resourceUri, appId)
             .then(authCompletedCallback, function () {
+                alert("We require user cridentials so triggers authentication dialog");
                 // We require user cridentials so triggers authentication dialog
                 app.context.acquireTokenAsync(resourceUri, appId, redirectUri)
                 .then(authCompletedCallback, function (err) {
