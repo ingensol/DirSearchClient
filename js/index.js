@@ -300,7 +300,8 @@ var app = {
         });
     },
     // Renders application error.
-    error: function(err) {
+    error: function (err) {
+        alert(err);
         var userlist = document.getElementById('userlist');
         userlist.innerHTML = "";
 
