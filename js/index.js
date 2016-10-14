@@ -174,6 +174,11 @@ var app = {
        // app.acquireTokenSilent();
        
         app.context = new Microsoft.ADAL.AuthenticationContext(authority);
+        if (app.context == null) {
+            alert("Authentication context isn\'t created yet. Create context first");
+            //         app.error('Authentication context isn\'t created yet. Create context first');
+            return;
+        }
         alert("got context");
         app.context.tokenCache.readItems().then(function (items) {
             if (items.length > 0) {
