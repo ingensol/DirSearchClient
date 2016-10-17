@@ -1,207 +1,62 @@
-﻿// Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
+﻿/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
-var AuthenticationContext;
-
-var authority = 'https://login.windows.net/keckmedicine.onmicrosoft.com';
-var resourceUrl = 'https://graph.windows.net/';
-var appId = '2b12cfe7-b4d8-4256-9072-ca27dade4e55';
-var redirectUrl = 'http://localhost:4400/services/aad/redirectTarget.html';
-
-var tenantName = 'keckmedicine.onmicrosoft.com';
-var endpointUrl = resourceUrl + tenantName;
-
-function pre(json) {
-    return '<pre>' + JSON.stringify(json, null, 4) + '</pre>';
-}
+var authority = "https://login.windows.net/common",
+    redirectUri = "http://MyDirectorySearcherApp",
+    resourceUri = "https://graph.windows.net",
+    clientId = "2b12cfe7-b4d8-4256-9072-ca27dade4e55",
+    graphApiVersion = "2013-11-08";
 
 var app = {
-    // Application Constructor
-    initialize: function () {
-        this.bindEvents();
-    },
-    // Bind Event Listeners
-    //
-    // Bind any events that are required on startup. Common events are:
-    // 'load', 'deviceready', 'offline', and 'online'.
-    bindEvents: function () {
-        alert("bindEvents");
-        document.addEventListener('deviceready', app.onDeviceReady, false);
-        
-    },
-    // deviceready Event Handler
-    //
-    // The scope of 'this' is the event. In order to call the 'receivedEvent'
-    // function, we must explicitly call 'app.receivedEvent(...);'
+    // Invoked when Cordova is fully loaded.
     onDeviceReady: function () {
-        alert("onDeviceReady");
-        // app.receivedEvent('deviceready');
         document.getElementById('search').addEventListener('click', app.search);
-        app.logArea = document.getElementById("log-area");
-       // app.log("Cordova initialized, 'deviceready' event was fired");
-        AuthenticationContext = Microsoft.ADAL.AuthenticationContext;
     },
     // Implements search operations.
     search: function () {
         document.getElementById('userlist').innerHTML = "";
-        alert("Search");
-        app.authenticate(function (authresult) {          
+
+        app.authenticate(function (authresult) {
             var searchText = document.getElementById('searchfield').value;
-            alert("searchText = " + searchText);
             app.requestData(authresult, searchText);
-        });
-    },
-    // Update DOM on a Received Event
-    receivedEvent: function (id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
-    },
-
-    log: function (message, isError) {
-        isError ? console.error(message) : console.log(message);
-        var logItem = document.createElement('li');
-        logItem.classList.add("topcoat-list__item");
-        isError && logItem.classList.add("error-item");
-        var timestamp = '<span class="timestamp">' + new Date().toLocaleTimeString() + ': </span>';
-        logItem.innerHTML = (timestamp + message);
-        app.logArea.insertBefore(logItem, app.logArea.firstChild);
-    },
-    error: function (message) {
-        alert(message);
-        app.log(message, true);
-    },
-    createContext: function () {
-        alert("createContext");  
-        AuthenticationContext.createAsync(authority)
-        .then(function (context) {
-            app.authContext = context;
-            alert("Created authentication context for authority URL: " + context.authority);
-            app.acquireTokenSilent();
-      //      app.log("Created authentication context for authority URL: " + context.authority);
-        }, app.error);
-    },
-    acquireToken: function () {
-        alert("acquireToken");
-        if (app.authContext == null) {
-            alert("Authentication context isn\'t created yet. Create context first");
-   //         app.error('Authentication context isn\'t created yet. Create context first');
-            return;
-        }
-
-        app.authContext.acquireTokenAsync(resourceUrl, appId, redirectUrl)
-            .then(function (authResult) {
-                alert("Acquired token successfully: " + pre(authResult));
-                app.readTokenCache();
-     //           app.log('Acquired token successfully: ' + pre(authResult));
-            }, function (err) {
-                alert("Failed to acquire token: " + pre(err));
-    //            app.error("Failed to acquire token: " + pre(err));
-            });
-    },
-    acquireTokenSilent: function () {
-        alert("acquireTokenSilent");
-        if (app.authContext == null) {
-            alert("Authentication context isn\'t created yet. Create context first");
-     //       app.error('Authentication context isn\'t created yet. Create context first');
-            return;
-        }
-    
-        app.readTokenCache();
-        // testUserId parameter is needed if you have > 1 token cache items to avoid "multiple_matching_tokens_detected" error
-        // Note: This is for the test purposes only
-        var testUserId;
-        app.authContext.tokenCache.readItems().then(function (cacheItems) {
-            if (cacheItems.length > 0) {
-                alert("cacheItems.length");
-                testUserId = cacheItems[0].userInfo.userId;
-            }
-
-            app.authContext.acquireTokenSilentAsync(resourceUrl, appId, testUserId).then(function (authResult) {
-                alert("Acquired token successfull");
-      //          app.log('Acquired token successfully: ' + pre(authResult));
-            }, function (err) {
-                alert("Failed to acquire token silently " + pre(err));
-                app.acquireToken();
-        //        app.error("Failed to acquire token silently: " + pre(err));
-            });
-        }, function (err) {
-            app.acquireToken();
-       //     app.error("Unable to get User ID from token cache. Have you acquired token already? " + pre(err));
-        });
-    },
-    readTokenCache: function () {
-        alert("readTokenCache ");
-        if (app.authContext == null) {
-            alert("Authentication context isn\'t created yet. Create context first ");
-     //       app.error('Authentication context isn\'t created yet. Create context first');
-            return;
-        }
-
-        app.authContext.tokenCache.readItems()
-        .then(function (res) {
-            var text = "Read token cache successfully. There is " + res.length + " items stored.";
-            if (res.length > 0) {
-                text += "The first one is: " + pre(res[0]);
-            }
-            alert(text);
-      //      app.log(text);
-
-        }, function (err) {
-         //   app.error("Failed to read token cache: " + pre(err));
-        });
-    },
-    clearTokenCache: function () {
-        if (app.authContext == null) {
-          //  app.error('Authentication context isn\'t created yet. Create context first');
-            return;
-        }
-
-        app.authContext.tokenCache.clear().then(function () {
-            app.log("Cache cleaned up successfully.");
-        }, function (err) {
-           // app.error("Failed to clear token cache: " + pre(err));
         });
     },
     // Shows user authentication dialog if required.
     authenticate: function (authCompletedCallback) {
-        alert("authenticate");
-       // app.createContext();
-       // app.acquireTokenSilent();
-       
+
         app.context = new Microsoft.ADAL.AuthenticationContext(authority);
-        if (app.context == null) {
-            alert("Authentication context isn\'t created yet. Create context first");
-            //         app.error('Authentication context isn\'t created yet. Create context first');
-            return;
-        }
-        alert("got context");
         app.context.tokenCache.readItems().then(function (items) {
             if (items.length > 0) {
                 authority = items[0].authority;
                 app.context = new Microsoft.ADAL.AuthenticationContext(authority);
-                alert("tokenCache");
             }
-        });
-            alert("Attempt to authorize user silently");
-            // 
-            app.context.acquireTokenSilentAsync(resourceUri, appId)
+            // Attempt to authorize user silently
+            app.context.acquireTokenSilentAsync(resourceUri, clientId)
             .then(authCompletedCallback, function () {
-                alert("We require user cridentials so triggers authentication dialog");
                 // We require user cridentials so triggers authentication dialog
-                app.context.acquireTokenAsync(resourceUri, appId, redirectUri)
+                app.context.acquireTokenAsync(resourceUri, clientId, redirectUri)
                 .then(authCompletedCallback, function (err) {
-                    alert("Failed to authenticate: " + err);
                     app.error("Failed to authenticate: " + err);
                 });
             });
-            alert("Attempt to authorize user silently");
-        //});
-        
+        });
+
     },
     // Makes Api call to receive user list.
     requestData: function (authResult, searchText) {
@@ -212,21 +67,21 @@ var app = {
         req.open("GET", url, true);
         req.setRequestHeader('Authorization', 'Bearer ' + authResult.accessToken);
 
-        req.onload = function(e) {
+        req.onload = function (e) {
             if (e.target.status >= 200 && e.target.status < 300) {
                 app.renderData(JSON.parse(e.target.response));
                 return;
             }
             app.error('Data request failed: ' + e.target.response);
         };
-        req.onerror = function(e) {
+        req.onerror = function (e) {
             app.error('Data request failed: ' + e.error);
         }
 
         req.send();
     },
     // Renders user list.
-    renderData: function(data) {
+    renderData: function (data) {
         var users = data && data.value;
         if (users.length === 0) {
             app.error("No users found");
@@ -255,8 +110,8 @@ var app = {
                 elt.appendChild(children);
             }
 
-            if(attributes && attributes.constructor === Object) {
-                for(var attrName in attributes) {
+            if (attributes && attributes.constructor === Object) {
+                for (var attrName in attributes) {
                     elt.setAttribute(attrName, attributes[attrName]);
                 }
             }
@@ -264,7 +119,7 @@ var app = {
             return elt;
         }
 
-        users.map(function(userInfo) {
+        users.map(function (userInfo) {
             return $new('li', ['topcoat-list__item'], null, [
                 $new('div', [], null, [
                     $new('p', ['userinfo-label'], 'First name: '),
@@ -303,13 +158,12 @@ var app = {
                     })
                 ])
             ]);
-        }).forEach(function(userListItem) {
+        }).forEach(function (userListItem) {
             userlist.appendChild(userListItem);
         });
     },
     // Renders application error.
     error: function (err) {
-        alert(err);
         var userlist = document.getElementById('userlist');
         userlist.innerHTML = "";
 
