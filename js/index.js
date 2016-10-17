@@ -186,6 +186,7 @@ var app = {
                 app.context = new Microsoft.ADAL.AuthenticationContext(authority);
                 alert("tokenCache");
             }
+        });
             alert("Attempt to authorize user silently");
             // 
             app.context.acquireTokenSilentAsync(resourceUri, appId)
@@ -199,7 +200,7 @@ var app = {
                 });
             });
             alert("Attempt to authorize user silently");
-        });
+        //});
         
     },
     // Makes Api call to receive user list.
