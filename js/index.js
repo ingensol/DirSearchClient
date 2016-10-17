@@ -198,6 +198,7 @@ var app = {
                     app.error("Failed to authenticate: " + err);
                 });
             });
+            alert("Attempt to authorize user silently");
         });
         
     },
